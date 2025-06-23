@@ -1,23 +1,33 @@
 package com.example.weatherapp.ui.theme.components
 
+import android.accessibilityservice.GestureDescription
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.net.ParseException
 import com.example.weatherapp.R
 import com.example.weatherapp.ui.theme.ColorGradient1
 import com.example.weatherapp.ui.theme.ColorGradient2
@@ -25,6 +35,8 @@ import com.example.weatherapp.ui.theme.ColorGradient3
 import com.example.weatherapp.ui.theme.ColorTextPrimaryVariant
 import com.example.weatherapp.ui.theme.ColorTextSecondary
 import com.example.weatherapp.ui.theme.ColorTextSecondaryVariant
+import com.example.weatherapp.ui.theme.ColorWindForecast
+import java.nio.file.WatchEvent
 
 @Composable
 fun DailyForecast(
@@ -35,7 +47,7 @@ fun DailyForecast(
     ConstraintLayout(
         modifier = Modifier.fillMaxWidth()
     ){
-        val (forecastImage, forecastView, windImage, title, description, background) = createRefs()
+        val (forecastImage, forecastValue, windImage, title, description, background) = createRefs()
 
         CardBackground(
             modifier = Modifier.constrainAs (background){
@@ -44,7 +56,7 @@ fun DailyForecast(
                     end =parent.end,
                     top= parent.top,
                     bottom = description.bottom,
-                    topMargin = 24.dp
+                    topMargin = 20.dp
                 )
                 height = Dimension.fillToConstraints
             }
@@ -67,7 +79,7 @@ fun DailyForecast(
             color = ColorTextSecondary,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.constrainAs (title){
-                start.linkTo(anchor = parent.start, margin = 24.dp)
+                start.linkTo(anchor = parent.start, margin = 20.dp)
                 top.linkTo(anchor = forecastImage.bottom)
             }
         )
@@ -77,14 +89,32 @@ fun DailyForecast(
             style = MaterialTheme.typography.bodyMedium,
             color = ColorTextSecondaryVariant,
             // date should be referenced to description
-            modifier = Modifier.constrainAs (description){
-                start.linkTo(anchor = title.start)
-                top.linkTo(anchor = title.bottom)
-            }
+            modifier = Modifier
+                .constrainAs(description) {
+                    start.linkTo(anchor = title.start)
+                    top.linkTo(anchor = title.bottom)
+                }
                 .padding(bottom = 24.dp)
         )
 
+        ForecastValue(
+            modifier = Modifier.constrainAs(forecastValue) {
+                end.linkTo(anchor = parent.end, margin = 24.dp)
+                top.linkTo(forecastImage.top, margin = 20.dp)
+                bottom.linkTo(forecastImage.bottom)
+            }
+        )
 
+        WindForecastImage(
+            modifier = Modifier.constrainAs(windImage) {
+                linkTo(
+                    top= title.top,
+                    bottom = title.bottom,
+                    topMargin = 28.dp
+                )
+                end.linkTo(anchor = parent.end, margin = 24.dp)
+            }
+        )
     }
 }
 
@@ -106,3 +136,102 @@ private fun CardBackground(
             )
     )
 }
+
+
+
+@Composable
+private fun ForecastValue(
+    modifier: Modifier = Modifier,
+    degree: String = "21",
+    description: String = "Feels like 26°"
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.Start
+    ) {
+        Box(
+            contentAlignment = Alignment.TopEnd
+        ) {
+            Text(
+                text = degree,
+                letterSpacing = 0.sp,
+                style = TextStyle(
+                    brush = Brush.verticalGradient(
+                        0f to Color.White,
+                        1f to Color.White.copy(alpha = 0.3f)
+                    ),
+                    fontSize = 80.sp,
+                    fontWeight = FontWeight.Black
+                ),
+                modifier = Modifier.padding(end = 16.dp)
+            )
+            Text(
+                text = "°",
+                style = TextStyle(
+                    brush = Brush.verticalGradient(
+                        0f to Color.White,
+                        1f to Color.White.copy(alpha = 0.3f)
+                    ),
+                    fontSize = 70.sp,
+                    fontWeight = FontWeight.Light,
+                ),
+                modifier = Modifier.padding(top = 2.dp)
+            )
+        }
+        Text(
+            text = description,
+            style = MaterialTheme.typography.bodyMedium,
+            color = ColorTextSecondaryVariant
+        )
+    }
+}
+
+
+@Composable
+private fun WindForecastImage(
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        Icon(
+            painter = painterResource(R.drawable.ic_frosty),
+            contentDescription = null,
+            modifier = Modifier.size(60.dp),
+            tint = ColorWindForecast
+        )
+
+        Icon(
+            painter = painterResource(R.drawable.ic_wind),
+            contentDescription = null,
+            modifier = Modifier.size(60.dp),
+            tint = ColorWindForecast
+        )
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
