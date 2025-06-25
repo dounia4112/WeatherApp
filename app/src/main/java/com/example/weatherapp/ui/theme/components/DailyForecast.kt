@@ -47,11 +47,14 @@ fun DailyForecast(
     ConstraintLayout(
         modifier = Modifier.fillMaxWidth()
     ){
+        //references that identifies this composable so you can define how it should be positioned relative to other layout elements.
         val (forecastImage, forecastValue, windImage, title, description, background) = createRefs()
 
         CardBackground(
+            //applies constraints to the CardBackground composable
             modifier = Modifier.constrainAs (background){
                 linkTo(
+                    //parent refers to the ConstraintLayout container that wraps around this composable.
                     start = parent.start,
                     end =parent.end,
                     top= parent.top,
@@ -150,6 +153,7 @@ private fun ForecastValue(
         horizontalAlignment = Alignment.Start
     ) {
         Box(
+            //positions this Text in the top-right corner of the Box
             contentAlignment = Alignment.TopEnd
         ) {
             Text(

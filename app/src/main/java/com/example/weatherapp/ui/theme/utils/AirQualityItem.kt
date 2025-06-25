@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes
 import com.example.weatherapp.R
 
 data class AirQualityItem(
+    //A reference to a drawable resource
     @DrawableRes val icon: Int,
     val title: String,
     val value: String

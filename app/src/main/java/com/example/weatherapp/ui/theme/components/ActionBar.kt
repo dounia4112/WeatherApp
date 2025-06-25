@@ -113,6 +113,7 @@ private fun ProfileButton(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()
+                // to create a circle shape
                 .clip(CircleShape)
         )
     }
@@ -125,7 +126,7 @@ private fun LocationInfo(
     location: String = "Algeria"
 ) {
     Column (
-        modifier = Modifier,
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ){
